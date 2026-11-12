@@ -6,12 +6,15 @@ Narrative zombie survival horror for Roblox, synced with [Rojo](https://rojo.spa
 
 | File | Runs as | Role |
 | --- | --- | --- |
-| `src/server/CoreGameController.server.lua` | Script | Round loop, floors, DataStore profiles, timers, hunger/thirst |
+| `src/server/CoreGameController.server.lua` | Script | Round loop, generated floors, DataStore profiles, timers, hunger/thirst |
 | `src/server/InteractionSystem.lua` | ModuleScript | Aim-ray interaction, inventory, doors, hiding, peeking, prompts |
+
+`CoreGameController` is self-contained plain Lua 5.1: it requires no modules and builds each floor (a closed 40x10x40 room named `ActiveFloor`, with a `Spawns` folder) from Parts at `Y = 500`. To finish a floor, fire `ServerStorage.ServerSignals.FloorExitRequested` with a player who is in the run.
+
+`InteractionSystem` is currently not loaded by anything: something must `require` it and call `Init(ReplicatedStorage.Remotes)` and `AddPlayer(player)` before the setup below applies.
 
 ## Studio setup
 
-- `ServerStorage.Floors`: one Model per layout. `Floor_30` … `Floor_01` are used for that exact floor; any others are cycled. Each needs a `Spawns` folder of parts.
 - `ServerStorage.ItemModels` (optional): a Model or Part named after each item id, used for dropped and looted items.
 - A lobby with a `SpawnLocation` in Workspace.
 - Enable Studio API access for DataStores.
